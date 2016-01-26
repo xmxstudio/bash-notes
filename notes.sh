@@ -52,66 +52,10 @@ siteurl=http://notes.xmxstudio.com
 
 #TODO: figure out this clipboard command bullshit
 	case $1 in
-		('test')
-			xtest=();
-			xtest+=("pewp");
-			xtest+=("and");
-			xtest+=("eat");
-			xtest+=("pee");
-			echo $xtest
-		;;
-		('about')
-			banner "NOTES" ${WHITE} ${blue}
-			echo "\n"
-			banner "😎 xmetrix@gmail.com" ${YELLOW} ${default}
-			banner "🌎 $siteurl" ${lightgray} ${default}
-			echo "If you'd like to revise, optimize, or otherwise contribute to this script, please feel free to DO IT. JUST DO IT! \n\nIf there are features you'd like to request, simply go to the above url and post the feature request on the feature request page"
-		;;
-		('tacos')
-			echo "🕵 tacos in disguise!"
-			;;
-		('credits')
-			banner NOTES ${WHITE} ${blue}
-			lightteal_defaultbg "Thanks to many viewers at livecoding tv. will do some cool stuff with this later. perhaps animated credit list.\n"	
-			;;
-		('help')
-			banner "NOTES v$version" ${WHITE} ${blue}
-			echo " "
-			echo -e "usage:  \e[96mnotes \e[33m<options>"
-			echo " "
-			listHelpItem "about" "author email, website url, and information about this script"
-			listHelpItem "add [\"notename\"]" "creates a new note for the current directory"
-			listHelpItem "all" "lists all note s system wide"
-			listHelpItem "all clip" "copies the contents of the note (system wide) to your clipboard"
-			listHelpItem "all del [#]" "deletes a note from anywhere by index number"
-			listHelpItem "all edit [#]" "reads a note from anywhere by index number"
-			listHelpItem "all read [#]" "reads a note from anywhere by index number"
-			listHelpItem "all rename [#] [newname]" "renames a note" 
-			listHelpItem "backup" "tar's the .notes folder"
-			listHelpItem "count" "get a small report of the number of notes and folders"
-			listHelpItem "clip" "copies the contents of the note to your clipboard"
-			listHelpItem "credits" "take a guess"
-			listHelpItem "dirs" "get a small report of the number and names of directories that have notes"
-			listHelpItem "del [#]" "deletes note by index number"
-			listHelpItem "edit [#]" "edits a note passed in by index number"
-			listHelpItem "find [query]" "searches all notes for matching text in both note name and contents"  
-			listHelpItem "hash" "get a hash of current pwd"
-			listHelpItem "lc" "get current list of notes with line count"
-			listHelpItem "read [#]" "reads a note passed in by index number"
-			listHelpItem "rename [#] [newname]" "renames a note"  
-			listHelpItem "wc" "get current list of notes with lines/words/character count"
-			echo " \n"
-			echo "examples:\n"
-			echo -e "   \e[96mnotes add mynote hello world"
-			echo -e "   \e[90mcreates a note called mynote with the content \"hello world\"\n"222
-			echo -e "   \e[96mnotes all"
-			echo -e "   \e[90mdisplays all notes\n"
-			echo -e "   \e[96mnotes all del 5"
-			echo -e "   \e[90mdeletes the 5th item listed in the notes all result list\n"
-			red_defaultbg "Known issues:\n"		
-			echo -e "  \e[90mYou may not create a note with certain characters in the filename, such as \e[96mnotes add mynote! hello world.\e[90m as this will result in an error due to restricted filename characters \e[39m"
-			echo -e "  \e[90mThe clip command defaults to xclip and may fail if you do not have xclip installed. you can type \e[96mwhich xclip\e[90m to see if you have it installed\e[39m"
-			echo "";;
+		('about') displayabout;;
+		('tacos') echo "🕵 tacos in disguise!";;
+		('credits')	displaycredits;;
+		('help')	displayhelp;;
 
 		('home')
 			cd $notesroot
@@ -130,13 +74,13 @@ siteurl=http://notes.xmxstudio.com
 					banner NOTES ${WHITE} ${blue}
 					banner "❗Note already exists - $2" ${RED} ${default}
 				else
-					if [ -d "$notesroot$folderHash/" ]
-					then
-						#do nothing
-					else
-						mkdir "$notesroot$folderHash/"
-						echo $PWD > "$notesroot$folderHash/.parentpath"
-					fi
+					# if [ -d "$notesroot$folderHash/" ]
+					# then
+					# 	# ###do nothing
+					# else
+					 	mkdir -p "$notesroot$folderHash/"
+					 	echo $PWD > "$notesroot$folderHash/.parentpath"
+					# fi
 				if [ $# -gt 2 ]; then	
 					sp=${#2}
 					((sp+=5))
@@ -350,7 +294,6 @@ siteurl=http://notes.xmxstudio.com
 								dirsfound+=("$highlighted\n"); 
 								((totalfound++));
 							fi
-					
 							############## check each folder of notes for a match on note filename and note contents
 							for note in $entry/*
 							do
@@ -363,16 +306,12 @@ siteurl=http://notes.xmxstudio.com
 										notenamesfound+=("$li\n");
 										((totalfound++));
 									fi
-
 									contents=$(cat $note --number | grep $2);
 									if [[ $contents  == *$2* ]]
 									then
 									 	bn=$(basename $note);
 									 	lineinfo=$(cat $note --number | grep $2 | awk '{print "\tline number" $0}');
-
 									 	li="${lineinfo/$2/\e[92m\e[49m$2\e[39m}"
-									 	
-										
 									 	contentsfound+=("\e[39m\e[49m$bn ➜ 📁$pp\e[39m\n$li\n");
 									# 	#echo aaa $contentsfound FFFF
 									 	((totalfound++));
@@ -405,12 +344,8 @@ siteurl=http://notes.xmxstudio.com
 					banner "\e[92m\e[49m📁 Content matches\e[39m" ${WHITE} ${default}
 					echo $contentsfound;
 				fi
-					
-
-				
-					
-					if [[ $totalfound ==  0 ]]
-					then
+				if [[ $totalfound ==  0 ]]
+				then
 					banner "NO NOTES FOUND\n" ${RED} ${default}
 				fi
 		;;	
@@ -445,9 +380,9 @@ siteurl=http://notes.xmxstudio.com
 							((i++))
 							bn=$(basename $note)
 							if [[ $bn == $4 ]]
-								then
-									banner NOTES ${WHITE} ${blue}
-									banner "Can not rename - file already exists" ${RED} ${default}
+							then
+								banner NOTES ${WHITE} ${blue}
+								banner "Can not rename - file already exists" ${RED} ${default}
 								return
 							fi
 							if [[ $i = $3 ]]
@@ -458,22 +393,21 @@ siteurl=http://notes.xmxstudio.com
 								wait
 								modDate=$(stat -c %y $notesroot$folderHash/$4 | awk '{print $1}') 
 								if [[ ${#modDate} -gt 1 ]]
-									then
+								then
 									teal_defaultbg "Renamed $(basename $note) ➜ $4\n"
 								else
 									echo "FAILED!"
 								fi
-							
 								((found++))
 							fi
 						done
 					fi
-					done 
-					if [[ $found -eq 0 ]]
-					then
-						banner "NOTE NOT FOUND" ${RED} ${default}
-					fi
-;;
+				done 
+				if [[ $found -eq 0 ]]
+				then
+					banner "NOTE NOT FOUND" ${RED} ${default}
+				fi
+				;;
 				('read')
 				#	********************************************************************* ALL READ
 
@@ -841,13 +775,12 @@ siteurl=http://notes.xmxstudio.com
 						banner NOTES ${WHITE} ${blue}
 						banner "TODO Note already exists - $32" ${RED} ${default}
 					else
-						if [ -d $notesroot"todo/" ]
-						then
-							#do nothing
-						else
-							mkdir $notesroot"todo/"
-							echo $notesroot"todo/" > $notesroot"todo/.parentpath"
-						fi
+						# if [ -d $notesroot"todo/" ]
+						# then
+						# else
+						 	mkdir -p $notesroot"todo/"
+						 	echo $notesroot"todo/" > $notesroot"todo/.parentpath"
+						# fi
 
 						if [ $# -gt 2 ]
 				 		then	
@@ -883,7 +816,7 @@ siteurl=http://notes.xmxstudio.com
 						if [[ $i = $3 ]]
 						then
 							((found++))
-							banner NOTES ${WHITE} ${blue}
+							banner NOTES ${WHITE} ${blue}\
 							red_defaultbg "DELETED $(basename $note)\n"
 							rm $note
 						fi
@@ -992,7 +925,6 @@ function listTodoItem(){
 		firstline=${firstline:0:$toremove}...
 	fi
 	echo -e "\e[107m\e[33m$index\e[39m - \e[37m$datemodified\e[39m - \e[94m$note\e[33m\e[90m - $firstline\e[39m\e[49m"
-	#vb6 days of cleanup! PRE GC!
 	unset index
 	unset datemodified
 	unset note
@@ -1029,8 +961,6 @@ function teal_defaultbg(){
 function lightteal_defaultbg(){
 	echo -e "\e[49m\e[96m$1\e[32m\e[49m"
 }
-
-
 function listAllTodo(){
 	banner "NOTES" ${WHITE} ${blue}
 	echo -e "\e[107m\e[30m📋TODO NOTES" # \e[39m\e49m";
@@ -1054,3 +984,59 @@ function listAllTodo(){
 		banner "NO TODO NOTES FOUND\n" ${RED} ${default}
 	fi
 }
+
+
+function displayabout(){
+	banner "NOTES" ${WHITE} ${blue}
+	echo "\n"
+	banner "😎 xmetrix@gmail.com" ${YELLOW} ${default}
+	banner "🌎 $siteurl" ${lightgray} ${default}
+	echo "If you'd like to revise, optimize, or otherwise contribute to this script, please feel free to DO IT. JUST DO IT! \n\nIf there are features you'd like to request, simply go to the above url and post the feature request on the feature request page"
+}
+function displaycredits(){
+	banner NOTES ${WHITE} ${blue}
+lightteal_defaultbg "Thanks to many viewers at livecoding tv. will do some cool stuff with this later. perhaps animated credit list.\n"	
+}
+function displayhelp(){
+	banner "NOTES v$version" ${WHITE} ${blue}
+			echo " "
+			echo -e "usage:  \e[96mnotes \e[33m<options>"
+			echo " "
+			listHelpItem "about" "author email, website url, and information about this script"
+			listHelpItem "add [\"notename\"]" "creates a new note for the current directory"
+			listHelpItem "all" "lists all note s system wide"
+			listHelpItem "all clip" "copies the contents of the note (system wide) to your clipboard"
+			listHelpItem "all del [#]" "deletes a note from anywhere by index number"
+			listHelpItem "all edit [#]" "reads a note from anywhere by index number"
+			listHelpItem "all read [#]" "reads a note from anywhere by index number"
+			listHelpItem "all rename [#] [newname]" "renames a note" 
+			listHelpItem "backup" "tar's the .notes folder"
+			listHelpItem "count" "get a small report of the number of notes and folders"
+			listHelpItem "clip" "copies the contents of the note to your clipboard"
+			listHelpItem "credits" "take a guess"
+			listHelpItem "dirs" "get a small report of the number and names of directories that have notes"
+			listHelpItem "del [#]" "deletes note by index number"
+			listHelpItem "edit [#]" "edits a note passed in by index number"
+			listHelpItem "find [query]" "searches all notes for matching text in both note name and contents"  
+			listHelpItem "hash" "get a hash of current pwd"
+			listHelpItem "lc" "get current list of notes with line count"
+			listHelpItem "read [#]" "reads a note passed in by index number"
+			listHelpItem "rename [#] [newname]" "renames a note"  
+			listHelpItem "wc" "get current list of notes with lines/words/character count"
+			echo " \n"
+			echo "examples:\n"
+			echo -e "   \e[96mnotes add mynote hello world"
+			echo -e "   \e[90mcreates a note called mynote with the content \"hello world\"\n"222
+			echo -e "   \e[96mnotes all"
+			echo -e "   \e[90mdisplays all notes\n"
+			echo -e "   \e[96mnotes all del 5"
+			echo -e "   \e[90mdeletes the 5th item listed in the notes all result list\n"
+			red_defaultbg "Known issues:\n"		
+			echo -e "  \e[90mYou may not create a note with certain characters in the filename, such as \e[96mnotes add mynote! hello world.\e[90m as this will result in an error due to restricted filename characters \e[39m"
+			echo -e "  \e[90mThe clip command defaults to xclip and may fail if you do not have xclip installed. you can type \e[96mwhich xclip\e[90m to see if you have it installed\e[39m"
+			echo ""
+}
+
+
+banner "NOTES READY"  107 30
+
