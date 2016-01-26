@@ -1,11 +1,12 @@
 notes () {
+
 # this is one of my first shell scripts. It's messy. it's ugly. 
 # there's a lot of code that can be optimized and stripped out. 
 # there are better ways of doing this. So please do it and post changes.
 # cant believe i acutally finished something. What a strange fucking feeling.
 
 #foreground
-DEFAULT=39
+	DEFAULT=39
 	BLACK=30
 	RED=31
 	GREEN=32
@@ -23,11 +24,11 @@ DEFAULT=39
 	LIGHTCYAN=96
 	WHITE=97
 #background
-default=49
+	default=49
 	black=40
 	red=41
 	green=42
-	yellow=43 #acutally ORANGE!
+	yellow=43
 	blue=44
 	magenta=45
 	cyan=46
@@ -40,13 +41,15 @@ default=49
 	lightmagenta=105
 	lightcyan=106
 	white=107
-	
+
 editor=nano #vim vi whatever pico doesnt matter
 notesroot=/home/xmetrix/.notes/ #must end with trailing slash
 backupDestination=/home/xmetrix/.notes/ #must end with trailing slash
 backupFilename="notesbackup.tar.gz"
 version=1.0
 siteurl=http://notes.xmxstudio.com
+
+
 #TODO: figure out this clipboard command bullshit
 	case $1 in
 		('test')
@@ -55,18 +58,22 @@ siteurl=http://notes.xmxstudio.com
 			xtest+=("and");
 			xtest+=("eat");
 			xtest+=("pee");
-			echo $xtest;
+			echo $xtest
 		;;
 		('about')
-		banner "NOTES" ${WHITE} ${blue}
+			banner "NOTES" ${WHITE} ${blue}
 			echo "\n"
 			banner "😎 xmetrix@gmail.com" ${YELLOW} ${default}
 			banner "🌎 $siteurl" ${lightgray} ${default}
 			echo "If you'd like to revise, optimize, or otherwise contribute to this script, please feel free to DO IT. JUST DO IT! \n\nIf there are features you'd like to request, simply go to the above url and post the feature request on the feature request page"
+		;;
+		('tacos')
+			echo "🕵 tacos in disguise!"
 			;;
-		('tacos')	 echo "🕵 tacos in disguise!";;
-		('credits')			banner NOTES ${WHITE} ${blue}
-			lightteal_defaultbg "Thanks to many viewers at livecoding tv. will do some cool stuff with this later. perhaps animated credit list.\n"	;;
+		('credits')
+			banner NOTES ${WHITE} ${blue}
+			lightteal_defaultbg "Thanks to many viewers at livecoding tv. will do some cool stuff with this later. perhaps animated credit list.\n"	
+			;;
 		('help')
 			banner "NOTES v$version" ${WHITE} ${blue}
 			echo " "
@@ -78,7 +85,6 @@ siteurl=http://notes.xmxstudio.com
 			listHelpItem "all clip" "copies the contents of the note (system wide) to your clipboard"
 			listHelpItem "all del [#]" "deletes a note from anywhere by index number"
 			listHelpItem "all edit [#]" "reads a note from anywhere by index number"
-			#listHelpItem "all move [#] [newpath]" "moves a note to the new path, direct or relative" #### NOT DONE YET
 			listHelpItem "all read [#]" "reads a note from anywhere by index number"
 			listHelpItem "all rename [#] [newname]" "renames a note" 
 			listHelpItem "backup" "tar's the .notes folder"
@@ -91,11 +97,8 @@ siteurl=http://notes.xmxstudio.com
 			listHelpItem "find [query]" "searches all notes for matching text in both note name and contents"  
 			listHelpItem "hash" "get a hash of current pwd"
 			listHelpItem "lc" "get current list of notes with line count"
-			#listHelpItem "move [#] [newpath]" "moves a note to the new path, direct or relative" #### NOT DONE YET
 			listHelpItem "read [#]" "reads a note passed in by index number"
 			listHelpItem "rename [#] [newname]" "renames a note"  
-			
-
 			listHelpItem "wc" "get current list of notes with lines/words/character count"
 			echo " \n"
 			echo "examples:\n"
@@ -105,16 +108,13 @@ siteurl=http://notes.xmxstudio.com
 			echo -e "   \e[90mdisplays all notes\n"
 			echo -e "   \e[96mnotes all del 5"
 			echo -e "   \e[90mdeletes the 5th item listed in the notes all result list\n"
-			
 			red_defaultbg "Known issues:\n"		
 			echo -e "  \e[90mYou may not create a note with certain characters in the filename, such as \e[96mnotes add mynote! hello world.\e[90m as this will result in an error due to restricted filename characters \e[39m"
 			echo -e "  \e[90mThe clip command defaults to xclip and may fail if you do not have xclip installed. you can type \e[96mwhich xclip\e[90m to see if you have it installed\e[39m"
-		
-
-
 			echo "";;
+
 		('home')
-		cd $notesroot
+			cd $notesroot
 		;;
 		('add')
 		# ***************************************************************************** ADD
@@ -124,7 +124,6 @@ siteurl=http://notes.xmxstudio.com
 					banner "must supply a note name" ${RED} ${default}
 			return
 		fi
-
 		 	folderHash=$(echo $PWD | awk '{print $1}' | md5sum | awk '{print $1}') 
 			if [ -f $notesroot$folderHash/$2 ]
 			then
@@ -280,9 +279,7 @@ siteurl=http://notes.xmxstudio.com
 
 				fi
 			done;;
-
-		('rename')
-			# **************************************************************************** RENAME
+		('rename')			# **************************************************************************** RENAME
 			nn=$3
 			if [[ ${#nn} == 0 ]]
 			then
@@ -328,27 +325,19 @@ siteurl=http://notes.xmxstudio.com
 					banner "NOTES" ${WHITE} ${blue} 
 					banner "NOTE NOT FOUND" ${RED} ${default}
 			fi
-			;;
-
-			('find')
-				#*******************************************************************  SEARCH
-
+;;
+		('find')				#*******************************************************************  SEARCH
 				if [ -z $2 ]
 					then
 					banner NOTES ${WHITE} ${blue};
 					banner " You must supply a search query\n" ${RED} ${default};
 					return;
 				fi
-
-
-
 				banner "NOTES" ${WHITE} ${blue}
-
 				dirsfound=();
 				contentsfound=();
 				notenamesfound=();
 				totalfound=0;
-
 				for entry in $notesroot*
 					do
 						if [ -d "$entry" ]
@@ -424,98 +413,13 @@ siteurl=http://notes.xmxstudio.com
 					then
 					banner "NO NOTES FOUND\n" ${RED} ${default}
 				fi
-				#end search
-			;;	
-
-
-	# ('move')
-	# 	# **************************************************************************** MOVE
-	# 	# NO FILENAME RENAMING!! that is exactly what RENAME is for.
-	# 	# this is going to prove to be the most time consuming one. gotta split the new path and see if the folder needs to be created.
-	# 	#TODO:  make it take either indirect or direct path 
-	# 	#for now we're just going to do DIRECT PATH ONLY 
-	# 	makedir=false
-	# 	srcHash=$( echo $PWD  | awk '{print $1}' | md5sum | awk '{print $1}')
-	# 	src=$notesroot$srcHash$2
-	# 	dest=$3
-	# 	firstchar=${dest:0:1}
-	# 	if [[ ${#dest} == 0 ]] then
-	# 		banner NOTES ${WHITE} ${blue}
-	# 		banner "Can not move - no target folder specified" ${RED} ${default}
-	# 		return
-	# 	fi #quit if no dest specified
-	# 	if [[ $firstchar != "/" ]]
-	# 		then
-	# 			banner NOTES ${WHITE} ${blue}
-	# 	 		banner "Can not move - please specify target folder (e.g., /var/www/html)" ${RED} ${default}
-	# 	fi
-	# 	rp=$(realpath $dest)
-	# 	folderHash=$(  echo $rp  | awk '{print $1}' | md5sum | awk '{print $1}')
-
-	# 	if [[  ! -d $dest ]]; then
-	# 		echo "invalid directory"
-	# 		return 
-	# 	fi
-
-
-	# 	let i=0
-	# 	let found=0
-	# 	for entry in "$notesroot$srcHash/"*
-	# 		do
-	# 	 		if [ -f "$entry" ]
-	# 	 		then
-	# 	 			((i++))
-	# 	 			if [[ $i == $2 ]]; then
-
-
-	# 					if [[ -d $notesroot$folderHash ]]
-	# 						then
-	# 						#check for existing file
-	# 					else
-	# 						#create notes folder for target directory
-	# 						mkdir $notesroot$folderHash
-	# 						wait
-	# 						#add parentpath file
-	# 						echo $rp > $notesroot$folderHash/.parentpath
-	# 						wait
-	# 						#move source note to new note folder
-	# 						mv $notesroot$srcHash/$note  $notesroot$folderHash/$note
-	# 						wait
-	# 						banner "NOTES" ${WHITE} ${blue} 
-	# 						note=$(basename $entry)
-	# 		 			 	teal_defaultbg "Moved $note ➜ $3\n"
-	# 		 			 	wait
-	# 		 			 	modDate=$(stat -c %y  $notesroot$folderHash/$note | awk '{print $1}') 
-	# 		 			 	echo $modDate
-	# 					fi
-
-		 				
-	# 	 				((found++))
-	# 	 			fi
-	# 	 		fi
-	# 	 	done
-
-	# 	 	if [[ $found -eq 0 ]]
-	# 	 		then
-	# 	 			banner "NOTES" ${WHITE} ${blue} 
-	# 	 			banner "NOTE NOT FOUND" ${RED} ${default}
-	# 	 	fi
-	# 	;;
-
-
+		;;	
 		('all') 
 		   let i=0
 		   let found=0
 			case $2 in
 				('rename')
 				# ************************************************************************* ALL RENAME
-
-				
-				# bd=$3
-				# [[ ${bd:0:1} == "/" ]] && dest=$3 || dest=$PWD/$3
-				# echo $dest
-
-
 				nn=$4 #newname
 				firstchar=${nn:0:1}
 				if [[ $firstchar == "." ]] || [[ $firstchar == "/" ]]  #make sure its not trying to move to another path
@@ -524,16 +428,12 @@ siteurl=http://notes.xmxstudio.com
 					banner "Can not rename - invalid path in new name" ${RED} ${default}
 					return
 				fi
-
 				if [[ ${#nn} == 0 ]] 
 				then
 					banner NOTES ${WHITE} ${blue}
 					banner "Can not rename - new name not specififed" ${RED} ${default}
 					return
 				fi
-
-
-
 				for entry in $notesroot*
 				do
 					if [ -d "$entry" ]
@@ -573,11 +473,7 @@ siteurl=http://notes.xmxstudio.com
 					then
 						banner "NOTE NOT FOUND" ${RED} ${default}
 					fi
-				;;
-
-
-
-
+;;
 				('read')
 				#	********************************************************************* ALL READ
 
@@ -643,8 +539,6 @@ siteurl=http://notes.xmxstudio.com
 						banner NOTES ${WHITE} ${blue}
 						red_defaultbg "Not not found - nothing deleted\n"
 					else
-						###MIGHT DELETE THIS
-						### SHOW LIST OF ALL FILES INCASE THE PERSON MIGHT TRY DELETING OVER AND OVER NOT REALIZING THEY"RE IN THE WRONG FOLDER
 						let i=0
 						banner "NOTES" ${WHITE} ${blue}
 						for entry in $notesroot*
@@ -673,8 +567,7 @@ siteurl=http://notes.xmxstudio.com
 							banner "NO NOTES FOUND\n" ${RED} ${default}
 						fi
 
-					fi
-;;
+					fi;;
 				('edit')
 				#******************************************************************* ALL EDIT 
 					let found=0
@@ -734,12 +627,7 @@ siteurl=http://notes.xmxstudio.com
 					then
 						banner "NOTE NOT FOUND" ${RED} ${default}
 					fi;;
-
-				
-
-
-
-				('lc')
+				('lc')	
 				#*******************************************************************  ALL  LINECOUNT
 				 banner "NOTES" ${WHITE} ${blue}
 					for entry in $notesroot*
@@ -768,7 +656,7 @@ siteurl=http://notes.xmxstudio.com
 						banner "📁/* ALL NOTES" ${LIGHTCYAN} ${default}
 						banner "NO NOTES FOUND\n" ${RED} ${default}
 					fi;;	
-					('wc')
+				('wc')
 				#*******************************************************************  ALL  LINECOUNT
 				 banner "NOTES" ${WHITE} ${blue}
 					for entry in $notesroot*
@@ -826,8 +714,8 @@ siteurl=http://notes.xmxstudio.com
 						banner "NO NOTES FOUND\n" ${RED} ${default}
 					fi;;
 			esac ;;
-		('dirs')
-		# ****************************************************************************** DIRS
+
+		('dirs')		# ****************************************************************************** DIRS
 		let dcount=0
 		noteDirs=""
 		for entry in $notesroot*
@@ -881,13 +769,13 @@ siteurl=http://notes.xmxstudio.com
 					lightteal_defaultbg "Backup completed\n"
 					lightteal_defaultbg "$backupDestination$backupFilename created"
 					lightteal_defaultbg "filesize: $(stat -c%s $backupDestination$backupFilename) bytes"  ;;
-		('hash')		# ************************************************************************ HASH
+		('hash')
+			# ************************************************************************ HASH
 		 folderHash=$(echo $PWD | awk '{print $1}' | md5sum | awk '{print $1}') 
 			banner NOTES ${WHITE} ${blue}
 			lightteal_defaultbg "$PWD = $folderHash\n";;
-	
 		('lc')
-			 folderHash=$(echo $PWD | awk '{print $1}' | md5sum | awk '{print $1}') 
+		folderHash=$(echo $PWD | awk '{print $1}' | md5sum | awk '{print $1}') 
 			if [ -d $notesroot$folderHash/ ]
 			then
 				banner "NOTES" ${WHITE} ${blue}
@@ -912,8 +800,7 @@ siteurl=http://notes.xmxstudio.com
 				banner "📁$(pwd) "  ${LIGHTCYAN} ${default}
 				banner "NO NOTES FOUND" ${RED} ${black}
 			fi	;;
-			('wc')
-			 folderHash=$(echo $PWD | awk '{print $1}' | md5sum | awk '{print $1}') 
+		('wc') folderHash=$(echo $PWD | awk '{print $1}' | md5sum | awk '{print $1}') 
 			if [ -d $notesroot$folderHash/ ]
 			then
 				banner "NOTES" ${WHITE} ${blue}
@@ -938,8 +825,102 @@ siteurl=http://notes.xmxstudio.com
 				banner "📁$(pwd) "  ${LIGHTCYAN} ${default}
 				banner "NO NOTES FOUND" ${RED} ${black}
 			fi	;;
+		('todo') 
+			let i=0
+			let found=0
+			case $2 in
+				('add') 
+					if [ -z $3 ]
+						then
+						banner NOTES ${WHITE} ${blue}
+						banner "must supply a todo note name" ${RED} ${default}
+						return
+					fi	
+					if [ -f $notesroot"todo/"$3 ]
+					then
+						banner NOTES ${WHITE} ${blue}
+						banner "TODO Note already exists - $32" ${RED} ${default}
+					else
+						if [ -d $notesroot"todo/" ]
+						then
+							#do nothing
+						else
+							mkdir $notesroot"todo/"
+							echo $notesroot"todo/" > $notesroot"todo/.parentpath"
+						fi
 
-		(*) # ************************************************************************ NOTES
+						if [ $# -gt 2 ]
+				 		then	
+							sp=${#3}
+							((sp+=9)) 
+							args=$*
+							length=${#args}
+							len=$((length-sp))
+							note=${args:$sp:$len}
+							echo $note>$notesroot"todo"/$3
+						else
+							$editor $notesroot"todo"/$3
+							wait
+						fi
+						fs=$(stat -c%s $notesroot"todo"/$3)
+						if [ $fs -ge 1 ] || 0
+						then
+							banner NOTES ${WHITE} ${blue}
+							lightteal_defaultbg "$3 - successfully created"
+						else
+							banner NOTES ${WHITE} ${blue}
+							red_defaultbg "$3 - not created"
+						fi
+					fi
+			;;
+			('del') 
+			#notes todo del #
+			#           1    2     3
+				let found=0
+				for note in $notesroot"todo/"*
+					do
+						((i++))
+						if [[ $i = $3 ]]
+						then
+							((found++))
+							banner NOTES ${WHITE} ${blue}
+							red_defaultbg "DELETED $(basename $note)\n"
+							rm $note
+						fi
+					done
+					listAllTodo
+					;;
+				('read')
+					let i=0;
+					let found=0;
+					for note in $notesroot"todo/"*
+						do
+						((i++))
+						if [[ $i = $3 ]]
+							then
+							((found++))
+							banner "NOTES" ${WHITE} ${blue}
+							teal_defaultbg "📚 Reading $(basename $note) ⟺ TODO   "  
+							notecontent=$(cat $note)
+							echo -e "\e[90m\e[49m$notecontent\e[32m\n"
+						fi
+						done
+					if [[ $found -eq 0 ]]
+						then
+								banner "NOTES" ${WHITE} ${blue}
+								banner "TODO NOTE NOT FOUND" ${RED} ${default}
+					fi
+
+					;;
+				(*) 
+				listAllTodo
+				;;
+
+			esac
+		;;
+
+		(*) 
+		# ************************************************************************ NOTES
 		 folderHash=$(echo $PWD | awk '{print $1}' | md5sum | awk '{print $1}') 
 			if [ -d $notesroot$folderHash/ ]
 			then
@@ -966,16 +947,15 @@ siteurl=http://notes.xmxstudio.com
 			fi	;;
 	esac
 }
-function banner(){
-	bt=$1
+function banner(){	bt=$1
 	bw=${#bt}
 	first=$(printf "%*s"  $(( (bw + $(tput cols)) / 2 )) "$1")
 	last=$(printf "%*s"  $(( (bw + $(tput cols)) / 2 )) " ")
 	both=$first$last
 	stripped=${both:0:$(tput cols)}
-	echo -e "\e[$2m\e[$3m"$stripped"\e[39m\e[49m"
-}
-function listItem(){#1 = index, 2=date, 3=note name, 4=firstline
+	echo -e "\e[$2m\e[$3m"$stripped"\e[39m\e[49m"}
+function listItem(){
+#1 = index, 2=date, 3=note name, 4=firstline
 	index=$1
 	datemodified=$2
 	note=$3
@@ -995,24 +975,82 @@ function listItem(){#1 = index, 2=date, 3=note name, 4=firstline
 	unset datemodified
 	unset note
 	unset firstline
+	unset strLength}
+function listTodoItem(){
+#1 = index, 2=date, 3=note name, 4=firstline
+	index=$1
+	datemodified=$2
+	note=$3
+	firstline=$4
+	strLength=$((13+${#index}+${#datemodified}+${#note}+${#firstline}))
+	consolewidth=$(tput cols)
+
+	if [[ strLength -gt consolewidth ]]
+		then
+		toremove=$((consolewidth-strLength))
+		#echo $toremove " chars to cut off"
+		firstline=${firstline:0:$toremove}...
+	fi
+	echo -e "\e[107m\e[33m$index\e[39m - \e[37m$datemodified\e[39m - \e[94m$note\e[33m\e[90m - $firstline\e[39m\e[49m"
+	#vb6 days of cleanup! PRE GC!
+	unset index
+	unset datemodified
+	unset note
+	unset firstline
 	unset strLength
 }
-function listHelpItem(){#1 = command, 2=description 
+function listHelpItem(){
 	cmd=$1
 	desc=$2
 	strLength=$((3+${#cmd}+${#desc}))
 	consolewidth=$(tput cols)
-	
-	
 	if [[ strLength -gt consolewidth ]] && [[ consolewidth -gt 60 ]]
 		then
 		toremove=$((consolewidth-strLength))
 		firstline=${firstline:0:$toremove}...
 	fi
-	echo -e "\e[49m\e[33m$cmd\e[39m - \e[37m$desc\e[39m\e[49m"}
-function red_whitebg(){echo -e "\e[107m\e[31m$1\e[32m\e[49m"}
-function red_defaultbg(){echo -e "\e[49m\e[31m$1\e[32m\e[49m"}
-function teal_whitebg(){echo -e "\e[107m\e[36m$1\e[32m\e[49m"}
-function teal_blackbg(){echo -e "\e[40m\e[36m$1\e[32m\e[49m"}
-function teal_defaultbg(){echo -e "\e[49m\e[36m$1\e[32m\e[49m"}
-function lightteal_defaultbg(){	echo -e "\e[49m\e[96m$1\e[32m\e[49m"}
+	echo -e "\e[49m\e[33m$cmd\e[39m - \e[37m$desc\e[39m\e[49m"
+}
+function red_whitebg(){
+	echo -e "\e[107m\e[31m$1\e[32m\e[49m"
+}
+function red_defaultbg(){
+	echo -e "\e[49m\e[31m$1\e[32m\e[49m"
+}
+function teal_whitebg(){
+	echo -e "\e[107m\e[36m$1\e[32m\e[49m"
+}
+function teal_blackbg(){
+	echo -e "\e[40m\e[36m$1\e[32m\e[49m"
+}
+function teal_defaultbg(){
+	echo -e "\e[49m\e[36m$1\e[32m\e[49m"
+}
+function lightteal_defaultbg(){
+	echo -e "\e[49m\e[96m$1\e[32m\e[49m"
+}
+
+
+function listAllTodo(){
+	banner "NOTES" ${WHITE} ${blue}
+	echo -e "\e[107m\e[30m📋TODO NOTES" # \e[39m\e49m";
+	let i=0;
+	for entry in $notesroot"todo/"*
+		do
+			if [ -f "$entry" ]
+				then
+				((i++))
+				paddedIndex=$(seq -f "%02g" $i $i) 
+				modDate=$(stat -c %y $entry | awk '{print $1}') 
+				partial=$(head -n 1 $entry)
+				#listItem $paddedIndex $modDate ${entry##*/} $partial
+				listTodoItem $paddedIndex $modDate ${entry##*/} $partial
+			fi
+		done
+		echo " "
+	if [[ $i -eq 0 ]]
+		then
+		banner "📁/* ALL TODO NOTES" ${LIGHTCYAN} ${default}
+		banner "NO TODO NOTES FOUND\n" ${RED} ${default}
+	fi
+}
