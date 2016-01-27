@@ -1,0 +1,27 @@
+
+add this function to display an icon if there are notes for the current directory
+
+prompt_notes(){
+	fh=$(echo $PWD | awk '{print $1}' | md5sum | awk '{print $1}')
+	let count=0
+	if [ -d ~/.notes/$fh ]; then
+		dir=(~/.notes/$fh/*)
+		numfiles=${#dir[@]}
+		prompt_segment cyan black ☵
+		#$numfiles
+	fi
+}
+
+
+## Main prompt
+build_prompt() {
+  RETVAL=$?
+  prompt_notes  <--- add this line to add notes to the beginning of the prompt
+  prompt_status
+  prompt_virtualenv
+  prompt_context
+  prompt_dir
+  prompt_git
+  prompt_hg
+  prompt_end
+}
